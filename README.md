@@ -17,7 +17,7 @@ Run the extract_predictions.py script to compute the map and query features, and
 ```shell
 python3 extract_predictions.py --dataset MSLS --root_dir /mydir/MSLS/ --subset val --model_file models/MSLS/MSLS_resnet152_avg_480_GCL.pth --backbone resnet152 --pool avg --norm L2 --image_size 480,640 --batch_size 4
 ```
-This will produce the file results/MSLS/val/MSLS_resnet152_avg_480_GCL_predictions.txt that you should use to evaluate the MSLS_resnet152_avg_480_GCL model in the [MSLS repo](https://github.com/mapillary/mapillary_sls/tree/master/mapillary_sls).
+This will produce the file results/MSLS/val/MSLS_resnet152_avg_480_GCL_predictions.txt that you should use to evaluate the MSLS_resnet152_avg_480_GCL model in the [MSLS repository](https://github.com/mapillary/mapillary_sls/tree/master/mapillary_sls).
 
 
 #### TB-Places
