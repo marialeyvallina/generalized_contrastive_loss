@@ -66,9 +66,8 @@ def distances(query_feats_file, map_feats_file):
 
 def extract_features_msls(subset, root_dir, net, f_length, image_t, savename, results_dir, batch_size, k):
     cities=default_cities[subset]
-    if not os.path.exists(results_dir+subset):
-        os.makedirs(results_dir+subset)
-    result_file=results_dir+subset+"/"+savename+"_predictions.txt"
+
+    result_file=results_dir+"/"+savename+"_predictions.txt"
     f=open(result_file, "w+")
     f.close()
     for c in cities:
@@ -77,10 +76,10 @@ def extract_features_msls(subset, root_dir, net, f_length, image_t, savename, re
         q_idx_file = root_dir+"train_val/"+c+"/query.json"
         m_idx_file = root_dir+"train_val/"+c+"/database.json"
         q_dl = create_dataloader("test", root_dir, q_idx_file, None, image_t, batch_size)
-        q_feats_file =results_dir+subset+"/"+savename+"_"+c+"_queryfeats.npy"
+        q_feats_file =results_dir+"/"+savename+"_"+c+"_queryfeats.npy"
         extract_features(q_dl, net, f_length, q_feats_file)
         m_dl = create_dataloader("test", root_dir, m_idx_file, None, image_t, batch_size)
-        m_feats_file =results_dir+subset+"/"+savename+"_"+c+"_mapfeats.npy"
+        m_feats_file =results_dir+"/"+savename+"_"+c+"_mapfeats.npy"
         extract_features(m_dl, net, f_length, m_feats_file)
         dists_file=distances(q_feats_file,m_feats_file)
         extract_msls_top_k(dists_file, m_idx_file, q_idx_file, result_file, k, m_raw_file)
@@ -132,7 +131,8 @@ if __name__ == "__main__":
     params = p.opt
 
     #Create model and load weights
-    test_net = create_model(params.backbone, params.pool, norm=params.norm,mode="single")
+    pool=params.pool
+    test_net = create_model(params.backbone, pool, norm=params.norm, mode="single")
     try:
         test_net.load_state_dict(torch.load(params.model_file)["model_state_dict"])
     except:
@@ -142,15 +142,22 @@ if __name__ == "__main__":
 
     #Create the datasets
     image_size=[int(x) for x in (params.image_size).split(",")]
-    print("testing with images of size",image_size[0],image_size[1])
-    image_t = ttf.Compose([ttf.Resize(size=(image_size[0],image_size[1])),
-                       ttf.ToTensor(),
-                       ttf.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-                       ]) 
+    if len(image_size)==2:
+        print("testing with images of size",image_size[0],image_size[1])
+        image_t = ttf.Compose([ttf.Resize(size=(image_size[0],image_size[1])),
+                           ttf.ToTensor(),
+                           ttf.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                           ]) 
+    else:
+        print("testing with images of size",image_size[0])
+        image_t = ttf.Compose([ttf.Resize(size=image_size[0]),
+                           ttf.ToTensor(),
+                           ttf.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+                           ]) 
 
     f_length = int(params.f_length)
 
-    results_dir = "results/"+params.dataset+"/"
+    results_dir = "results/"+params.dataset+"/"+params.subset+"/"
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
     savename=params.model_file.split("/")[-1].split(".")[0]
