@@ -17,8 +17,25 @@ Run the extract_predictions.py script to compute the map and query features, and
 ```shell
 python3 extract_predictions.py --dataset MSLS --root_dir /mydir/MSLS/ --subset val --model_file models/MSLS/MSLS_resnet152_avg_480_GCL.pth --backbone resnet152 --pool avg --norm L2 --image_size 480,640 --batch_size 4
 ```
-This will produce the file results/MSLS/val/MSLS_resnet152_avg_480_GCL_predictions.txt that you should use to evaluate thr model in the [MSLS repo](https://github.com/mapillary/mapillary_sls/tree/master/mapillary_sls).
+This will produce the file results/MSLS/val/MSLS_resnet152_avg_480_GCL_predictions.txt that you should use to evaluate the MSLS_resnet152_avg_480_GCL model in the [MSLS repo](https://github.com/mapillary/mapillary_sls/tree/master/mapillary_sls).
 
+
+#### TB-Places
+Run the extract_predictions.py script to compute the map and query features, and the map-query distances. For instance:
+```shell
+python3 extract_predictions.py --dataset TB_Places --root_dir /mydir/TB_Places/ --subset W18_W17 --model_file models/TB_Places/resnet34_avg_GCL.pth --backbone resnet34 --pool avg --image_size 224 --batch_size 4 --query_idx_file /mydir/TB_Places/W18/W18.json --map_idx_file /mydir/TB_Places/W17/W17.json --f_length 512
+```
+```shell
+python3 extract_predictions.py --dataset TB_Places --root_dir /mydir/TB_Places/ --subset W18_map_query --model_file models/TB_Places/resnet34_avg_GCL.pth --backbone resnet34 --pool avg --image_size 224 --batch_size 4 --query_idx_file /mydir/TB_Places/W18/W18_query.json --map_idx_file /mydir/TB_Places/W18/W18_map.json --f_length 512
+```
+For obtaining the top-k recall, run the script eval_recallatk.py. By default, the K values are 1,2,3,4,5,10,15,20,25.
+```shell
+python3 eval_recallatk.py --prediction_distance_file results/TB_Places/W18_W17/resnet34_avg_GCL_distances.npy --gt_file /mydir/TB_Places/W18_W17_gt.h5 
+```
+
+```shell
+python3 eval_recallatk.py --prediction_distance_file results/TB_Places/W18_map_query/resnet34_avg_GCL_distances.npy --gt_file /mydir/TB_Places/W18_map_query_gt.h5 
+```
 #### 7Scenes
 Run the extract_predictions.py script to compute the map and query features, and the map-query distances. For instance:
 ```shell
