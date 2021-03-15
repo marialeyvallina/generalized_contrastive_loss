@@ -1,6 +1,15 @@
 # Generalized Contrastive Loss
 ## Paper
-Coming soon
+If you use our code please cite our [paper](https://arxiv.org/abs/2103.06638)
+```
+@article{leyvavallina2021gcl,
+  title={Generalized Contrastive Optimization of Siamese Networks for Place Recognition}, 
+  author={María Leyva-Vallina and Nicola Strisciuglio and Nicolai Petkov},
+  journal={arXiv preprint arXiv:2103.06638},
+  year={2021}
+  url={https://arxiv.org/abs/2103.06638}
+}
+```
 ## How to use this library
 ### Download the data
 1. MSLS: The dataset is available on request [here](https://www.mapillary.com/dataset/places "MSLS"). For the new GT annotations, please contact us.
