@@ -10,6 +10,13 @@ If you use our code please cite our [paper](https://arxiv.org/abs/2103.06638)
   url={https://arxiv.org/abs/2103.06638}
 }
 ```
+## Network attention
+![](https://github.com/marialeyvallina/generalized_contrastive_loss/blob/main/attention.png)
+
+## Contact details
+If you have any doubts please contact us at:
+1. María Leyva-Vallina: m.leyva.vallina at rug dot nl
+2. Nicola Strisciuglio: n.strisciuglio at utwente dot nl
 ## How to use this library
 ### Download the data
 1. MSLS: The dataset is available on request [here](https://www.mapillary.com/dataset/places "MSLS"). For the new GT annotations, please contact us.
@@ -20,8 +27,26 @@ If you use our code please cite our [paper](https://arxiv.org/abs/2103.06638)
 5. 7Scenes: The dataset is available [here](https://github.com/marialeyvallina/TB_Places "TB-Places"). For the new GT annotations, please contact us.
 ### Download the models
 All our models can be downloaded from [here](https://drive.google.com/drive/folders/1RHxrAj062ZxDp5817t1s4OXGLP_i8JFX?usp=sharing).
-### Reproduce our results
+### Our results
 #### MSLS
+| Backbone  | Whitening | Pooling | Dimensions | Loss |  R@1 |  R@5 | R@10 | mAP@1 | mAP@5 | mAP@10 |
+|-----------|-----------|:-------:|------------|:----:|:----:|:----:|:----:|:-----:|:-----:|-----------------|
+| VGG       | No        |   GeM<sup>[1](https://research.mapillary.com/img/publications/CVPR20c.pdf)</sup>  | 512        |  TL  |  28  |  35  |  49  |   -   |   -   | -               |
+| VGG       | No        | NetVLAD<sup>[1](https://research.mapillary.com/img/publications/CVPR20c.pdf)</sup> | 32768      |  TL  |  30  |  40  |  44  |   -   |   -   | -               |
+| VGG       | No        | NetVLAD<sup>[1](https://research.mapillary.com/img/publications/CVPR20c.pdf)</sup> | 32768      |  TL  |  48  |  58  |  64  |   -   |   -   | -               |
+| VGG       | No        | PatchNetVLAD<sup>[2](https://arxiv.org/abs/2103.01486)</sup> | 32768      | TL   | 48.1 | 57.6  | 60.5 |   -   |   -   |        -        |
+| ResNet50  | No        |   avg   | 2048       |  CL  | 24.9 | 39.0 | 44.6 |  24.9 |  16.8 | 14.8            |
+| ResNet50  | No        |   avg   | 2048       |  GCL | 35.8 | 52.0 | 59.0 |  35.8 |  24.5 | 21.8            |
+| ResNet50  | No        |   GeM   | 2048       |  CL  | 29.7 | 44.0 | 50.7 |  29.7 |  20.6 | 18.1            |
+| ResNet50  | No        |   GeM   | 2048       |  GCL | 43.3 | 59.1 | 65.0 |  43.3 |   30  | 26.8            |
+| ResNet152 | No        |   avg   | 2048       |  CL  | 29.7 | 44.2 | 51.3 |  29.7 |  19.4 | 17.2            |
+| ResNet152 | No        |   avg   | 2048       |  GCL | 43.5 | 59.2 | 65.2 |  43.5 |  29.5 | 26.4            |
+| ResNet152 | No        |   GeM   | 2048       |  CL  | 34.1 | 50.8 | 56.8 |  34.1 |  23.6 | 20.8            |
+| ResNet152 | No        |   GeM   | 2048       |  GCL | 45.7 | 62.3 | 67.9 |  45.7 |  31.4 | 28.3            |
+| ResNet50  | Yes       |   GeM   | 2048       |  GCL | 52.9 | 65.7 | 71.9 |  52.9 |  37.3 | 33.4            |
+| ResNet152 | Yes       |   GeM   | 2048       |  GCL | **57.9** | **70.7** | **75.7** |  **57.9** |  **40.7** | **36.6**           |
+
+##### To reproduce them
 Run the extract_predictions.py script to compute the map and query features, and the top-k prediction. For instance:
 ```shell
 python3 extract_predictions.py --dataset MSLS --root_dir /mydir/MSLS/ --subset val --model_file models/MSLS/MSLS_resnet152_avg_480_GCL.pth --backbone resnet152 --pool avg --norm L2 --image_size 480,640 --batch_size 4
