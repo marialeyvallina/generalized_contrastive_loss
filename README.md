@@ -47,6 +47,12 @@ All our models can be downloaded from [here](https://drive.google.com/drive/fold
 | ResNet152 | Yes       |   GeM   | 2048       |  GCL | **57.9** | **70.7** | **75.7** |  **57.9** |  **40.7** | **36.6**           |
 
 ##### To reproduce them
+Run the labeling/create_json_idx.py file to generate the necessary json index files for the dataset.
+
+```shell
+python3 labeling/create_json_idx.py --dataset msls --root_dir /mydir/MSLS/
+```
+
 Run the extract_predictions.py script to compute the map and query features, and the top-k prediction. For instance:
 ```shell
 python3 extract_predictions.py --dataset MSLS --root_dir /mydir/MSLS/ --subset val --model_file models/MSLS/MSLS_resnet152_avg_480_GCL.pth --backbone resnet152 --pool avg --norm L2 --image_size 480,640 --batch_size 4
@@ -71,6 +77,11 @@ python3 eval_recallatk.py --prediction_distance_file results/TB_Places/W18_W17/r
 python3 eval_recallatk.py --prediction_distance_file results/TB_Places/W18_map_query/resnet34_avg_GCL_distances.npy --gt_file /mydir/TB_Places/W18_map_query_gt.h5 
 ```
 #### 7Scenes
+Run the labeling/create_json_idx.py file to generate the necessary json index files for the dataset.
+
+```shell
+python3 labeling/create_json_idx.py --dataset 7scenes --root_dir /mydir/7Scenes/
+```
 Run the extract_predictions.py script to compute the map and query features, and the map-query distances. For instance:
 ```shell
 python3 extract_predictions.py --dataset 7Scenes --root_dir /mydir/7Scenes/ --subset heads --model_file models/7Scenes/heads/resnet34_avg_GCL.pth --backbone resnet34 --pool avg --image_size 224 --batch_size 4 --query_idx_file /mydir/7Scenes/heads/test.json --map_idx_file /mydir/7Scenes/heads/train.json --f_length 512
