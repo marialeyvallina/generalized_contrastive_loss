@@ -49,7 +49,8 @@ All our models can be downloaded from [here](https://drive.google.com/drive/fold
 | ResNet152 | No        |   GeM   | 2048       |  CL  | 34.1 | 50.8 | 56.8 |  34.1 |  23.6 | 20.8            |
 | ResNet152 | No        |   GeM   | 2048       |  GCL | 45.7 | 62.3 | 67.9 |  45.7 |  31.4 | 28.3            |
 | ResNet50  | Yes       |   GeM   | 2048       |  GCL | 52.9 | 65.7 | 71.9 |  52.9 |  37.3 | 33.4            |
-| ResNet152 | Yes       |   GeM   | 2048       |  GCL | **57.9** | **70.7** | **75.7** |  **57.9** |  **40.7** | **36.6**           |
+| ResNet152 | Yes       |   GeM   | 2048       |  GCL | 57.9 | 70.7 | 75.7 |  57.9 |  40.7 | 36.6          |
+| ResNeXt-101-32x8d | Yes       |   GeM   | 1024       |  GCL | **62.3** | **76.2** | **81.1** |  **62.3** |  **47** | **43.8**           |
 
 ##### To reproduce them
 Run the labeling/create_json_idx.py file to generate the necessary json index files for the dataset.
