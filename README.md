@@ -44,7 +44,7 @@ All our models can be downloaded from [here](https://drive.google.com/drive/fold
 | VGG       | No        |   GeM<sup>[1](https://research.mapillary.com/img/publications/CVPR20c.pdf)</sup>  | 512        |  TL  |  28  |  35  |  49  |   -   |   -   | -               |
 | VGG       | No        | NetVLAD<sup>[1](https://research.mapillary.com/img/publications/CVPR20c.pdf)</sup> | 32768      |  TL  |  30  |  40  |  44  |   -   |   -   | -               |
 | VGG       | No        | NetVLAD<sup>[1](https://research.mapillary.com/img/publications/CVPR20c.pdf)</sup> | 32768      |  TL  |  48  |  58  |  64  |   -   |   -   | -               |
-| VGG       | No        | PatchNetVLAD<sup>[2](https://arxiv.org/abs/2103.01486)</sup> | 32768      | TL   | 48.1 | 57.6  | 60.5 |   -   |   -   |        -        |
+| VGG       | No        | PatchNetVLAD<sup>[2](https://arxiv.org/abs/2103.01486)</sup> | 4096      | TL   | 48.1 | 57.6  | 60.5 |   -   |   -   |        -        |
 | ResNet50  | No        |   avg   | 2048       |  CL  | 24.9 | 39.0 | 44.6 |  24.9 |  16.8 | 14.8            |
 | ResNet50  | No        |   avg   | 2048       |  GCL | 35.8 | 52.0 | 59.0 |  35.8 |  24.5 | 21.8            |
 | ResNet50  | No        |   GeM   | 2048       |  CL  | 29.7 | 44.0 | 50.7 |  29.7 |  20.6 | 18.1            |
