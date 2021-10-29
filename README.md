@@ -1,10 +1,15 @@
 # Generalized Contrastive Loss
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/generalized-contrastive-optimization-of/visual-place-recognition-on-mapillary-test)](https://paperswithcode.com/sota/visual-place-recognition-on-mapillary-test?p=generalized-contrastive-optimization-of)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/generalized-contrastive-optimization-of/visual-place-recognition-on-mapillary-val)](https://paperswithcode.com/sota/visual-place-recognition-on-mapillary-val?p=generalized-contrastive-optimization-of)
 
 Visual place recognition is a challenging task in computer vision and a key component of camera-based localization and navigation systems. Recently, Convolutional Neural Networks (CNNs) achieved high results and good generalization capabilities. They are usually trained using pairs or triplets of images labeled as either similar or dissimilar, in a binary fashion. In practice, the similarity between two images is not binary, but rather continuous. Furthermore, training these CNNs is computationally complex and involves costly pair and triplet mining strategies.
 We propose a Generalized Contrastive loss (GCL) function that relies on image similarity as a continuous measure, and use it to train a siamese CNN. Furthermore, we propose three techniques for automatic annotation of image pairs with labels indicating their degree of similarity, and deploy them to re-annotate the MSLS, TB-Places, and 7Scenes datasets.
 We demonstrate that siamese CNNs trained using the GCL function and the improved annotations consistently outperform their binary counterparts. Our models trained on MSLS outperform the state-of-the-art methods, including NetVLAD, and generalize well on the Pittsburgh, TokyoTM and Tokyo 24/7 datasets. Furthermore, training a siamese network using the GCL function does not require any pair mining. 
 
-## Paper
+## Paper and license
+The code is licensed under the [MIT License](license.md).
+
 If you use our code please cite our [paper](https://arxiv.org/abs/2103.06638)
 ```
 @article{leyvavallina2021gcl,
