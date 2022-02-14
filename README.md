@@ -39,14 +39,37 @@ If you have any doubts please contact us at:
 All our models can be downloaded from [here](https://drive.google.com/drive/folders/1RHxrAj062ZxDp5817t1s4OXGLP_i8JFX?usp=sharing).
 ### Our results
 #### MSLS
+
+| ** **                 |           |         |          | **MSLS-Val** |          |          | **MSLS-Test** |          |          | **Pitts30k** |          |          | **Tokyo24/7** |          |               | **RobotSeasons v2- all** |              |               | **Extended CMU-all** |              |
+| **Method**            | **PCA_w** | **Dim** | **R@1**  | **R@5**      | **R@10** | **R@1**  | **R@5**       | **R@10** | **R@1**  | **R@5**      | **R@10** | **R@1**  | **R@5**       | **R@10** | **0.25m/2° ** | **0.5m/5° **             | **5.0m/10º** | **0.25m/2° ** | **0.5m/5° **         | **5.0m/10º** |
+|-----------------------|-----------|---------|----------|--------------|----------|----------|---------------|----------|----------|--------------|----------|----------|---------------|----------|---------------|--------------------------|--------------|---------------|----------------------|--------------|
+
+| NetVLAD 64 Pittsburgh | N         | 32768   | 47.7     | 62.8         | 70.9     | 30.7     | 41.9          | 46.4     | 82.1     | 91.4         | 93.8     | 62.2     | 73.7          | 78.4     | 5.6           | 22.0                     | 71.0         | 10.7          | 27.8                 | 84.1         |
+| NetVLAD 64 Pittsburgh | Y         | 4096    | 70.7     | 81.4         | 84.6     | 30.6     | 41.9          | 47.5     | 83.7     | 91.8         | 94.0     | 67.0     | 77.8          | 80.3     | 5.8           | 23.1                     | 73.2         | 11.6          | 30.3                 | 87.5         |
+| NetVLAD 64 MSLS       | N         | 32768   | 44.6     | 61.1         | 66.4     | 28.8     | 44.0          | 50.7     | 40.4     | 64.5         | 74.2     | 11.4     | 24.1          | 31.4     | 2.0           | 9.2                      | 45.5         | 1.3           | 4.5                  | 31.9         |
+| NetVLAD 64 MSLS       | Y         | 4096    | 70.1     | 80.8         | 84.9     | 45.1     | 58.8          | 63.7     | 68.6     | 84.7         | 88.9     | 34.0     | 47.6          | 57.1     | 4.2           | 18.0                     | 68.1         | 3.9           | 12.1                 | 58.4         |
+| NetVLAD 16 MSLS       | N         | 8192    | 49.5     | 65.0         | 71.8     | 29.3     | 43.5          | 50.4     | 48.7     | 70.6         | 78.9     | 13.0     | 33.0          | 43.8     | 1.8           | 9.2                      | 48.4         | 1.7           | 5.5                  | 39.1         |
+| NetVLAD 16 MSLS       | Y         | 4096    | 70.5     | 81.1         | 84.3     | 39.4     | 53.0          | 57.5     | 70.3     | 84.1         | 89.1     | 37.8     | 53.3          | 61.0     | 4.8           | 17.9                     | 65.3         | 4.4           | 13.7                 | 61.4         |
+| Patch NetVLAD         | Y         | 4096    | 79.5     | 86.2         | 87.7     | 48.1     | 57.6          | 60.5     | 88.7     | 94.5         | 95.9     | 95.9     | 96.8          | 97.1     | **9.6**       | **35.3**                 | **90.9**     | **11.8**      | **36.2**             | **96.2**     |
+| AP-GeM                |           | 2048    | 64.1     | 75.0         | 78.2     | 33.7     | 44.5          | 49.4     | 80.7     | 91.4         | 94.0     | 11.4     | 22.9          | 30.5     | 5.1           | 20.5                     | 66.1         | 4.9           | 14.7                 | 65.2         |
+| NetVLAD-SARE          | Y         | 4096    | 68.1     | 77.3         | 82.4     | 34.4     | 44.3          | 48.8     | **87.8** | **94.3**     | **95.9** | **79.7** | **86.7**      | **90.5** | 7.4           | 26.5                     | 81.3         | 6.4           | 19.4                 | 75.5         |
+|-----------------------|-----------|---------|----------|--------------|----------|----------|---------------|----------|----------|--------------|----------|----------|---------------|----------|---------------|--------------------------|--------------|---------------|----------------------|--------------|
+| VGG-GeM-GCL           | N         | 512     | 65.9     | 77.8         | 81.4     | 41.7     | 55.7          | 60.6     | 61.6     | 80.0         | 86.0     | 34.0     | 51.1          | 61.3     | 3.7           | 15.8                     | 59.7         | 3.6           | 11.2                 | 55.8         |
+| VGG-GeM-GCL           | Y         | 512     | 72.0     | 83.1         | 85.8     | 47.0     | 60.8          | 65.5     | 73.3     | 85.9         | 89.9     | 47.6     | 61.0          | 69.2     | 5.4           | 21.9                     | 69.2         | 5.7           | 17.1                 | 66.3         |
+| ResNet50-GeM-GCL      | N         | 2048    | 66.2     | 78.9         | 81.9     | 43.3     | 59.1          | 65.0     | 72.3     | 87.2         | 91.3     | 44.1     | 61.0          | 66.7     | 2.9           | 14.0                     | 58.8         | 3.8           | 11.8                 | 61.6         |
+| ResNet50-GeM-GCL      | Y         | 1024    | 74.6     | 84.7         | 88.1     | 52.9     | 65.7          | 71.9     | 79.9     | 90.0         | 92.8     | 58.7     | 71.1          | 76.8     | 4.7           | 20.2                     | 70.0         | 5.4           | 16.5                 | 69.9         |
+| ResNet152-GeM-GCL     | N         | 2048    | 70.3     | 82.0         | 84.9     | 45.7     | 62.3          | 67.9     | 72.6     | 87.9         | 91.6     | 34.0     | 51.8          | 60.6     | 2.9           | 13.1                     | 63.5         | 3.6           | 11.3                 | 63.1         |
+| ResNet152-GeM-GCL     | Y         | 2048    | 79.5     | 88.1         | 90.1     | 57.9     | 70.7          | 75.7     | 80.7     | 91.5         | 93.9     | 69.5     | 81.0          | 85.1     | 6.0           | 21.6                     | 72.5         | 5.3           | 16.1                 | 66.4         |
+| ResNext-GeM-GCL       | N         | 2048    | 75.5     | 86.1         | 88.5     | 56.0     | 70.8          | 75.1     | 64.0     | 81.2         | 86.6     | 37.8     | 53.6          | 62.9     | 2.7           | 13.4                     | 65.2         | 3.5           | 10.5                 | 58.8         |
+| ResNext-GeM-GCL       | Y         | 1024    | **80.9** | **90.7**     | **92.6** | **62.3** | **76.2**      | **81.1** | 79.2     | 90.4         | 93.2     | 58.1     | 74.3          | 78.1     | 4.7           | 21.0                     | 74.7         | 6.1           | 18.2                 | 74.9         |
+
+
 | Backbone  | Whitening | Pooling | Dimensions | Loss |  R@1 |  R@5 | R@10 | mAP@1 | mAP@5 | mAP@10 |
 |-----------|-----------|:-------:|------------|:----:|:----:|:----:|:----:|:-----:|:-----:|-----------------|
 | VGG       | No        |   GeM<sup>[1](https://research.mapillary.com/img/publications/CVPR20c.pdf)</sup>  | 512        |  TL  |  28  |  35  |  49  |   -   |   -   | -               |
 | VGG       | No        | NetVLAD<sup>[1](https://research.mapillary.com/img/publications/CVPR20c.pdf)</sup> | 32768      |  TL  |  30  |  40  |  44  |   -   |   -   | -               |
 | VGG       | No        | NetVLAD<sup>[1](https://research.mapillary.com/img/publications/CVPR20c.pdf)</sup> | 32768      |  TL  |  48  |  58  |  64  |   -   |   -   | -               |
 | VGG       | No        | PatchNetVLAD<sup>[2](https://arxiv.org/abs/2103.01486)</sup> | 4096      | TL   | 48.1 | 57.6  | 60.5 |   -   |   -   |        -        |
-| ResNet50  | No        |   avg   | 2048       |  CL  | 24.9 | 39.0 | 44.6 |  24.9 |  16.8 | 14.8            |
-| ResNet50  | No        |   avg   | 2048       |  GCL | 35.8 | 52.0 | 59.0 |  35.8 |  24.5 | 21.8            |
 | ResNet50  | No        |   GeM   | 2048       |  CL  | 29.7 | 44.0 | 50.7 |  29.7 |  20.6 | 18.1            |
 | ResNet50  | No        |   GeM   | 2048       |  GCL | 43.3 | 59.1 | 65.0 |  43.3 |   30  | 26.8            |
 | ResNet152 | No        |   avg   | 2048       |  CL  | 29.7 | 44.2 | 51.3 |  29.7 |  19.4 | 17.2            |
@@ -60,16 +83,28 @@ All our models can be downloaded from [here](https://drive.google.com/drive/fold
 ##### To reproduce them
 Run the labeling/create_json_idx.py file to generate the necessary json index files for the dataset.
 
+Clone the [mapillary repository](https://github.com/mapillary/mapillary_sls/) and run the following command on your machine, substituting "mydir" with the path where you downloaded the mapillary library:
+
+```shell
+export MAPILLARY_ROOT="/mydir/mapillary_sls/"
+```
+
 ```shell
 python3 labeling/create_json_idx.py --dataset msls --root_dir /mydir/MSLS/
 ```
 
 Run the extract_predictions.py script to compute the map and query features, and the top-k prediction. For instance:
 ```shell
-python3 extract_predictions.py --dataset MSLS --root_dir /mydir/MSLS/ --subset val --model_file models/MSLS/MSLS_resnet152_avg_480_GCL.pth --backbone resnet152 --pool avg --norm L2 --image_size 480,640 --batch_size 4
+python3 extract_predictions.py --dataset MSLS --root_dir /mydir/MSLS/ --subset val --model_file models/MSLS/MSLS_resnet152_GeM_480_GCL.pth --backbone resnet152 --pool GeM --f_length 2048
 ```
-This will produce the file results/MSLS/val/MSLS_resnet152_avg_480_GCL_predictions.txt that you should use to evaluate the MSLS_resnet152_avg_480_GCL model in the [MSLS repository](https://github.com/mapillary/mapillary_sls/tree/master/mapillary_sls).
+This will produce the results on the MSLS validation set for this model. If you select --subset test, the file results/MSLS/test/MSLS_resnet152_GeM_480_GCL_predictions.txt will be generated. To evaluate the predictions you will need to submit this file to the [MSLS evaluation server](https://codalab.lisn.upsaclay.fr/competitions/865#results).
 
+To apply PCA whitening run the apply_pca.py script with the appropiate parameters. For instance, for the example above, you have to run:
+```shell
+python3 apply_pca.py --dataset MSLS --root_dir /mydir/MSLS/ --subset val --name MSLS_resnet152_GeM_480_GCL 
+```
+
+To reproduce all of our experiments we include a series of evaluation scripts in the scripts folder, for the MSLS, Pittsburgh, Tokyo24/7, TokyoTM, RobotCar Seasons v2 and Extended CMU Seasons datasets. These scripts need the index files for each dataset that are available [here](https://drive.google.com/drive/folders/1DT9hTiFKQH2x8aqJoFgmMGH8iftfZ0n-?usp=sharing) and our model files, available [here](https://drive.google.com/drive/folders/1RHxrAj062ZxDp5817t1s4OXGLP_i8JFX?usp=sharing).
 
 #### TB-Places
 Run the extract_predictions.py script to compute the map and query features, and the map-query distances. For instance:

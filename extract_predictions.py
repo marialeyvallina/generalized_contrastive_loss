@@ -6,6 +6,10 @@ import sys
 import torch
 import os
 import argparse
+from validate import validate
+from scipy.spatial.transform import Rotation as R
+import numpy as np
+
 
 msls_cities = {
         'train': ["trondheim", "london", "boston", "melbourne", "amsterdam", "helsinki",
@@ -40,27 +44,33 @@ class TestParser():
         self.opt = self.parser.parse_args()
 
 def extract_features(dl, net, f_length, feats_file):
-    feats = np.zeros((len(dl.dataset), f_length))
-    for i, batch in tqdm(enumerate(dl), desc="Extracting features"):
-        x = net.forward(batch.cuda())
-        feats[i * dl.batch_size:i * dl.batch_size + dl.batch_size] = x.cpu().detach().squeeze(0)
-    
-    np.save(feats_file, feats)
+    if not os.path.exists(feats_file):
+        feats = np.zeros((len(dl.dataset), f_length))
+        for i, batch in tqdm(enumerate(dl), desc="Extracting features"):
+            x = net.forward(batch.cuda())
+            feats[i * dl.batch_size:i * dl.batch_size + dl.batch_size] = x.cpu().detach().squeeze(0)
+        
+        np.save(feats_file, feats)
+    else:
+        print(feats_file,"already exists. Skipping.")
 
 
 def distances(query_feats_file, map_feats_file):
-    query_feats=np.load(query_feats_file)
-    map_feats=np.load(map_feats_file)
-    n = len(query_feats)
-    m = len(map_feats)
-    dists = np.zeros(( n,m), dtype="float16")
-    aux = 0
-    for i in tqdm(range(m), desc="Calculating distances"):
-        dists[:,i] = cdist(map_feats[i:i + 1, :], query_feats).flatten().astype("float16")
-        aux += n - 1 - i
-    dists= dists.astype("float16")
-    dists_file=map_feats_file.replace("_mapfeats.npy", "_distances.npy")
-    np.save(dists_file, dists)
+    dists_file=map_feats_file.replace("_mapfeats", "_distances")
+    if not os.path.exists(dists_file):
+        query_feats=np.load(query_feats_file)
+        map_feats=np.load(map_feats_file)
+        n = len(query_feats)
+        m = len(map_feats)
+        dists = np.zeros(( n,m), dtype="float16")
+        aux = 0
+        for i in tqdm(range(m), desc="Calculating distances"):
+            dists[:,i] = cdist(map_feats[i:i + 1, :], query_feats).flatten().astype("float16")
+            aux += n - 1 - i
+        dists= dists.astype("float16")
+        np.save(dists_file, dists)
+    else:
+        print(dists_file,"already exists. Skipping.")
     return dists_file
     
 
@@ -70,11 +80,13 @@ def extract_features_msls(subset, root_dir, net, f_length, image_t, savename, re
     result_file=results_dir+"/"+savename+"_predictions.txt"
     f=open(result_file, "w+")
     f.close()
+    
+    subset_dir=subset if subset == "test" else "train_val"
     for c in cities:
         print(c)
-        m_raw_file = root_dir+"train_val/"+c+"/database/raw.csv"
-        q_idx_file = root_dir+"train_val/"+c+"/query.json"
-        m_idx_file = root_dir+"train_val/"+c+"/database.json"
+        m_raw_file = root_dir+subset_dir+"/"+c+"/database/raw.csv"
+        q_idx_file = root_dir+subset_dir+"/"+c+"/query.json"
+        m_idx_file = root_dir+subset_dir+"/"+c+"/database.json"
         q_dl = create_dataloader("test", root_dir, q_idx_file, None, image_t, batch_size)
         q_feats_file =results_dir+"/"+savename+"_"+c+"_queryfeats.npy"
         extract_features(q_dl, net, f_length, q_feats_file)
@@ -82,10 +94,93 @@ def extract_features_msls(subset, root_dir, net, f_length, image_t, savename, re
         m_feats_file =results_dir+"/"+savename+"_"+c+"_mapfeats.npy"
         extract_features(m_dl, net, f_length, m_feats_file)
         dists_file=distances(q_feats_file,m_feats_file)
-        extract_msls_top_k(dists_file, m_idx_file, q_idx_file, result_file, k, m_raw_file)
+        result_file=extract_msls_top_k(dists_file, m_idx_file, q_idx_file, result_file, k, m_raw_file)
+    if subset =="val":
+        print(result_file)
+        validate(result_file, root_dir, result_file.replace("_predictions", "result")+".txt")
+
+def load_index(index):
+    with open(index) as f:
+        data = json.load(f)
+    im_paths = np.array(data["im_paths"])
+    im_prefix = data["im_prefix"]
+
+    if "poses" in data.keys():
+        poses = np.array(data["poses"])
+        return im_paths, poses, im_prefix
+    else:
+        return im_paths, im_prefix
+
+def world_to_camera(pose):
+    [w_qw, w_qx, w_qy, w_qz, w_tx, w_ty, w_tz ]=pose
+    r=R.from_quat([w_qx, w_qy, w_qz, w_qw]).as_matrix().T
+    tx,ty,tz=np.dot(np.array([ w_tx, w_ty, w_tz]), np.linalg.inv(-r))
+    qx, qy, qz, qw = R.from_matrix(r).as_quat()
+    return qw, qx, qy, qz, tx, ty, tz        
+
+def predict_poses_cmu(root_dir, dists_file):
+    ref_impaths, ref_poses, ref_impref = load_index(root_dir+"reference.json")
+    test_impaths, test_impref = load_index(root_dir+"test.json")
+
+    dists=np.load(dists_file)
+    best_score = np.argmin(dists, axis=1)
+    name=dists_file.replace("_distances", "_toeval").replace("/MSLS_", "/ExtendedCMU_eval_MSLS_").replace(".npy", ".txt")
+    with open(name, "w") as f:
+        for q, db_index in tqdm(zip(test_impaths, best_score), desc="Predicting poses..."):
+            cut_place=q.find("/img")
+            q_im_tosubmit=q[cut_place+1:]
+            pose = np.array((ref_poses[db_index]))
+            submission=q_im_tosubmit +" " + " ".join(pose.astype(str))+"\n"
+            f.write(submission)
 
 
-def extract_features_map_query(root_dir, q_idx_file, m_idx_file, net, f_length,savename, results_dir,batch_size, k):
+
+def predict_poses(root_dir, dists_file):
+    ref_impaths, ref_poses, ref_impref = load_index(root_dir+"reference.json")
+    test_impaths, test_impref = load_index(root_dir+"test.json")
+
+    dists=np.load(dists_file)
+
+    best_score = np.argsort(dists, axis=1)[:,0]
+    name=dists_file.replace("_distances", "_toeval").replace("/MSLS_", "/RobotCar_eval_MSLS_").replace(".npy", ".txt")
+    with open(name, "w") as f:
+        for q_im, db_index in tqdm(zip(test_impaths, best_score), desc="Predicting poses..."):
+            cut_place=q_im.find("/rear")
+            q_im_tosubmit=q_im[cut_place+1:]
+            assert q_im_tosubmit.startswith("rear/")
+            pose = np.array(world_to_camera(ref_poses[db_index]))
+            submission=q_im_tosubmit +" " + " ".join(pose.astype(str))+"\n"
+            f.write(submission)
+
+def eval_pitts(root_dir, ds, result_file):
+    if "pitts" in ds:
+        gt_file =root_dir+ds+"_test_gt.h5"
+    elif ds.lower()=="tokyotm":
+        gt_file =root_dir+"val_gt.h5"
+    else:
+        gt_file =root_dir+"gt.h5"
+    ret_idx=np.load(result_file)
+    score_file=result_file.replace("predictions.npy", "scores.txt")
+    print(ret_idx.shape)
+    ks=[1,2,3,4,5,10,15,20,25]
+    with open(score_file, "w") as sf:
+        with h5py.File(gt_file, "r") as f:
+            gt=f["sim"]
+            print(gt.shape)
+            for k in ks:
+                hits=0
+                total=0
+                for q_idx,ret in enumerate(ret_idx):
+                    if np.any(gt[q_idx,:]):
+                        total+=1        
+                        db_idx=sorted(ret[:k])
+                        hits+=np.any(gt[q_idx, db_idx])
+                print(k, np.round(hits/total*100,2))
+                sf.write(str(k)+","+str(np.round(hits/total*100,2))+"\n")
+
+
+
+def extract_features_map_query(root_dir, q_idx_file, m_idx_file, net, f_length,savename, results_dir,batch_size, k, ds):
     q_dl = create_dataloader("test", root_dir, q_idx_file, None, image_t, batch_size)
     q_feats_file =results_dir+"/"+savename+"_queryfeats.npy"
     extract_features(q_dl, net, f_length, q_feats_file)
@@ -94,29 +189,64 @@ def extract_features_map_query(root_dir, q_idx_file, m_idx_file, net, f_length,s
     extract_features(m_dl, net, f_length, m_feats_file)
     dists_file=distances(q_feats_file,m_feats_file)
     result_file=results_dir+"/"+savename+"_predictions.npy"
-    extract_top_k(dists_file, result_file, k)
+    if ds.lower() == "tokyotm":
+        extract_top_k_tokyotm(dists_file, m_idx_file, q_idx_file, result_file, k)
+    else:
+        extract_top_k(dists_file, result_file, k)
+    if ds == "robotcarseasons":
+        predict_poses(root_dir, dists_file)
+    elif ds == "extendedcmu" or ds == "cmu":
+        predict_poses_cmu(root_dir, dists_file)
+    elif "pitts" in ds or "tokyo" in ds:
+        eval_pitts(root_dir, ds, result_file)
 
 
+
+def extract_top_k_tokyotm(dists_file, db_idx_file, q_idx_file, result_idx_file, k):
+    print("TokyoTM")
+    dists=np.load(dists_file)
+    with open(db_idx_file, "r") as f:
+        db_paths=np.array(json.load(f)["im_paths"])
+    with open(q_idx_file, "r") as f:
+        q_paths=np.array(json.load(f)["im_paths"])
+    best_score = np.argsort(dists, axis=1)
+    result_idx=np.zeros((len(q_paths),k))
+    for i,q in enumerate(q_paths):
+        q_timestamp=int(q.split("/")[3][1:])
+        aux=0
+        for t in range(k):
+            idx=best_score[i,aux]
+            db=db_paths[idx]
+            db_timestamp=int(db.split("/")[3][1:])
+
+            while (np.abs(q_timestamp-db_timestamp)<1): #ensure we retrieve something at least a month away
+                aux+=1
+                idx=best_score[i,aux]
+                db=db_paths[idx]
+                db_timestamp=int(db.split("/")[3][1:])
+            result_idx[i,t]=best_score[i,aux]
+            aux+=1
+
+    np.save(result_idx_file, result_idx.astype(int))
+
+  
 def extract_msls_top_k(dists_file, db_idx_file, q_idx_file, result_file, k,m_raw_file=""):
     dists=np.load(dists_file)
-    if os.path.exists(m_raw_file):
-        m_pano=np.genfromtxt(m_raw_file, dtype=bool, skip_header=1, delimiter=",")[:,-1]
-
-        with open(db_idx_file, "r") as f:
-            db_paths=np.array(json.load(f)["im_paths"])[np.logical_not(m_pano)]
-            db_keys=[x.split("/")[-1].split(".")[0] for x in db_paths]
-    else:
-        with open(db_idx_file, "r") as f:
-            db_paths=np.array(json.load(f)["im_paths"])
-            db_keys=[x.split("/")[-1].split(".")[0] for x in db_paths]
+    with open(db_idx_file, "r") as f:
+        db_paths=np.array(json.load(f)["im_paths"])
     with open(q_idx_file, "r") as f:
-        q_keys=[x.split("/")[-1].split(".")[0] for x in json.load(f)["im_paths"]]
-    if os.path.exists(m_raw_file):
-        dists = dists[:,np.logical_not(m_pano)]
+        q_paths=np.array(json.load(f)["im_paths"])
     best_score = np.argsort(dists, axis=1)
+    result_idx=np.zeros((len(q_paths),k+1))
     with open(result_file, "a+") as f:
-        for i,q in enumerate(q_keys):
-            f.write(q+" "+" ".join([db_keys[j] for j in best_score[i,:k]])+"\n")
+        for i,q in enumerate(q_paths):
+            result_idx[i,0]=i 
+            result_idx[i,1:]=best_score[i,:k]
+            q_id=q.split("/")[-1].split(".")[0]
+            f.write(q_id+" "+" ".join([db_paths[j].split("/")[-1].split(".")[0] for j in best_score[i,:k]])+"\n")
+    np.save(result_file, result_idx)
+    return result_file
+
             
 def extract_top_k(dists_file, result_file, k):
     dists=np.load(dists_file)
@@ -129,7 +259,6 @@ if __name__ == "__main__":
     p = TestParser()
     p.parse()
     params = p.opt
-
     #Create model and load weights
     pool=params.pool
     test_net = create_model(params.backbone, pool, norm=params.norm, mode="single")
@@ -161,10 +290,11 @@ if __name__ == "__main__":
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
     savename=params.model_file.split("/")[-1].split(".")[0]
+    print(savename)
     if params.dataset.lower() == "msls":
         extract_features_msls(params.subset, params.root_dir, test_net, f_length, image_t, savename, results_dir, params.batch_size, 30)
     else:
-        extract_features_map_query(params.root_dir, params.query_idx_file, params.map_idx_file, test_net, f_length, savename, results_dir, params.batch_size, 30)
+        extract_features_map_query(params.root_dir, params.query_idx_file, params.map_idx_file, test_net, f_length, savename, results_dir, params.batch_size, 30, params.dataset.lower())
 
 
 

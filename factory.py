@@ -27,21 +27,27 @@ def get_backbone(name):
         backbone = models.resnet152(pretrained=True)
     elif name == "resnet50":
         backbone = models.resnet50(pretrained=True)
-    if "resnet" in name:
-        backbone = torch.nn.Sequential(*(list(backbone.children())[:-2]))
     if name == "densenet161":
         backbone = models.densenet161(pretrained=True).features
+        output_dim=2208
     elif name == "densenet121":
         backbone = models.densenet121(pretrained=True).features
+        output_dim=2208
     elif name == "vgg16":
         backbone = models.vgg16(pretrained=True).features
-    return backbone
+        output_dim=512
+    elif name == "resnext":
+        backbone = torch.hub.load('facebookresearch/WSL-Images', 'resnext101_32x8d_wsl')
+    if "resne" in name:
+        backbone = torch.nn.Sequential(*(list(backbone.children())[:-2]))
+        output_dim = 2048
+    return backbone, output_dim
 
 
 
 def create_model(name, pool, last_layer=None, norm=None, p_gem=3, num_clusters=64, mode="siamese"):
     
-    backbone = get_backbone(name)
+    backbone, output_dim = get_backbone(name)
     layers = len(list(backbone.children()))
 
     if last_layer is None:
