@@ -29,14 +29,14 @@ If you have any doubts please contact us at:
 2. Nicola Strisciuglio: n.strisciuglio at utwente dot nl
 ## How to use this library
 ### Download the data
-1. MSLS: The dataset is available on request [here](https://www.mapillary.com/dataset/places "MSLS"). For the new GT annotations, please register [here](https://forms.gle/zaG9vu8fCTT4FVcY6).
+1. MSLS: The dataset is available on request [here](https://www.mapillary.com/dataset/places "MSLS"). For the new GT annotations, please request them [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
 2. Pittsburgh: The whole dataset is available on request [here](http://www.ok.ctrl.titech.ac.jp/~torii/project/repttile/ "Pittsburgh") and the train val splits for Pitts30k are available [here](https://www.di.ens.fr/willow/research/netvlad/ "Pitts30k"). 
 3. TokyoTM: The dataset is available on request [here](https://www.di.ens.fr/willow/research/netvlad/ "TokyoTM"). 
 4. Tokyo 24/7: The dataset is available on request [here](http://www.ok.ctrl.titech.ac.jp/~torii/project/247/ "Tokyo 24/7"). 
-5. TB-Places: The dataset is available [here](https://github.com/marialeyvallina/TB_Places "TB-Places"). For the new GT annotations, please register [here](https://forms.gle/zaG9vu8fCTT4FVcY6).
-5. 7Scenes: The dataset is available [here](https://github.com/marialeyvallina/TB_Places "TB-Places"). For the new GT annotations, please register [here](https://forms.gle/zaG9vu8fCTT4FVcY6).
+5. TB-Places: The dataset is available [here](https://github.com/marialeyvallina/TB_Places "TB-Places"). For the new GT annotations, please request them [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).request them [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
+
 ### Download the models
-All our models can be downloaded from [here](https://drive.google.com/drive/folders/1RHxrAj062ZxDp5817t1s4OXGLP_i8JFX?usp=sharing).
+All our models can be downloaded from request them [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
 ### Our results
 #### MSLS
 
