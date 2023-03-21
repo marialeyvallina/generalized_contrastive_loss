@@ -84,7 +84,7 @@ def extract_features_msls(subset, root_dir, net, f_length, image_t, savename, re
             extract_features(m_dl, net, f_length, m_feats_file, m_feats_cls_file)
         else:
             extract_features(m_dl, net, f_length, m_feats_file)
-        result_file=extract_msls_top_k(m_feats_file,q_feats_file, m_idx_file, q_idx_file, result_file, k, m_raw_file, m)
+        result_file=extract_msls_top_k(m_feats_file,q_feats_file, m_idx_file, q_idx_file, result_file, k, m_raw_file)
     if subset =="val":
         print(result_file)
         score_file = result_file.replace("_predictions", "_result")

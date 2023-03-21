@@ -22,7 +22,7 @@ class GeM(nn.Module):
 
 
 class BaseNet(nn.Module):
-    def __init__(self, backbone, global_pool=None, poolkernel=7, norm=None, p=3, num_clusters=64):
+    def __init__(self, backbone, global_pool=None, poolkernel=7, norm=None, p=3):
         super(BaseNet, self).__init__()
         self.backbone = backbone
         for name, param in self.backbone.named_parameters():
@@ -47,9 +47,11 @@ class BaseNet(nn.Module):
 
 
 class SiameseNet(BaseNet):
-    def __init__(self, backbone, global_pool=None, poolkernel=7,norm=None, p=3,num_clusters=64):
-        super(SiameseNet, self).__init__(backbone, global_pool, poolkernel, norm=norm, p=p,num_clusters=num_clusters)
-
+    def __init__(self, backbone, global_pool=None, poolkernel=7,norm=None, p=3):
+        super(SiameseNet, self).__init__(backbone, global_pool, poolkernel, norm=norm, p=p)
+    
+    def forward_single(self, x0):
+        return super(SiameseNet, self).forward(x0)
     def forward(self, x0, x1):
         out0 = super(SiameseNet, self).forward(x0)
         out1 = super(SiameseNet, self).forward(x1)
