@@ -32,7 +32,7 @@ If you have any doubts please contact us at:
 2. Pittsburgh: The whole dataset is available on request [here](http://www.ok.ctrl.titech.ac.jp/~torii/project/repttile/ "Pittsburgh") and the train val splits for Pitts30k are available [here](https://www.di.ens.fr/willow/research/netvlad/ "Pitts30k"). 
 3. TokyoTM: The dataset is available on request [here](https://www.di.ens.fr/willow/research/netvlad/ "TokyoTM"). 
 4. Tokyo 24/7: The dataset is available on request [here](http://www.ok.ctrl.titech.ac.jp/~torii/project/247/ "Tokyo 24/7"). 
-5. TB-Places: The dataset is available [here](https://github.com/marialeyvallina/TB_Places "TB-Places"). For the new GT annotations, please request them [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).request them [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
+5. TB-Places: The dataset is available [here](https://github.com/marialeyvallina/TB_Places "TB-Places"). For the new GT annotations, please request them [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
 
 ### Download the models
 All our models can be downloaded from request them [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
