@@ -35,7 +35,7 @@ If you have any doubts please contact us at:
 5. TB-Places: The dataset is available [here](https://github.com/marialeyvallina/TB_Places "TB-Places"). For the new GT annotations, please request them [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
 
 ### Download the models
-All our models can be downloaded from request them [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
+All our models can be downloaded from request [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
 ### Our results
 #### MSLS
 
