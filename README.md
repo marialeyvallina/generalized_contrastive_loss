@@ -83,5 +83,6 @@ To reproduce all of our experiments we include a series of evaluation scripts in
 ### Train your own models
 If you want to train a model for MSLS using the GCL function you must execute train.py with the appropiate parameters. For example:
 ```shell
-python3 train.py --root_dir /mnt/NAS/Trimbot/Data/MSLS/ --cities val --backbone vgg16 --use_gpu --pool GeM --last_layer 2 
+python3 train.py --root_dir mydir/MSLS/ --cities val --backbone vgg16 --use_gpu --pool GeM --last_layer 2 
 ```
+Make sure that your root dir contains the graded GT files.
