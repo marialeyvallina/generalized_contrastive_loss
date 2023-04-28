@@ -10,7 +10,7 @@ We demonstrate that siamese CNNs trained using the GCL function and the improved
 ## Paper and license
 The code is licensed under the [MIT License](license.md).
 
-If you use our code please cite our [paper](https://arxiv.org/abs/2103.06638)
+If you use our code please cite our [paper](https://arxiv.org/abs/2303.11739)
 ```
 @article{leyvavallina2021gcl,
   title={Data-efficient Large Scale Place Recognition with Graded Similarity Supervision}, 
