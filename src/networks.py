@@ -33,7 +33,7 @@ class BaseNet(nn.Module):
         elif global_pool == "avg":
             self.pool = nn.AdaptiveAvgPool2d(output_size=(1, 1))
         elif global_pool == "GeM":
-            self.pool=GeM(p=p)
+            self.pool = GeM(p=p)
         else:
             self.pool = None
         self.norm=norm
@@ -42,7 +42,7 @@ class BaseNet(nn.Module):
         out = self.backbone.forward(x0)
         out = self.pool.forward(out).squeeze(-1).squeeze(-1)
         if self.norm == "L2":
-            out=nn.functional.normalize(out)
+            out = nn.functional.normalize(out)
         return out
 
 

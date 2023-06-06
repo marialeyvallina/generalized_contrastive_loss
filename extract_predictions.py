@@ -37,7 +37,7 @@ class TestParser:
         self.parser.add_argument('--pool', type=str, required=True, help='pool type|avg,max,GeM', default='GeM')
         self.parser.add_argument('--f_length', type=int, default=2048, help='feature length')
         self.parser.add_argument('--image_size', type=str, default="480,640", help='Input size, separated by commas')
-        self.parser.add_argument('--norm', type=str, default=None, help='Normalization descriptors')
+        self.parser.add_argument('--norm', type=str, default="L2", help='Normalization descriptors')
         self.parser.add_argument('--batch_size', type=int, default=16, help='Batch size')
 
     def parse(self):
@@ -262,6 +262,7 @@ if __name__ == "__main__":
     p = TestParser()
     p.parse()
     params = p.opt
+    print(params)
     # Create model and load weights
     pool = params.pool
     test_net = create_model(params.backbone, pool, norm=params.norm, mode="single")
