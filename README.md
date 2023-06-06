@@ -35,7 +35,7 @@ If you have any doubts please contact us at:
 5. TB-Places: The dataset is available [here](https://github.com/marialeyvallina/TB_Places "TB-Places"). For the new GT annotations, please request them [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
 
 ### Download the models
-All our models can be downloaded from request [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
+All our models (and labels) can be downloaded from [here](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).
 ### Our results
 #### MSLS
 
@@ -54,35 +54,41 @@ All our models can be downloaded from request [here](https://dataverse.nl/datase
 | ResNeXt-GeM-GCL   | Y         | 1024    | **80.9** | **90.7**     | **92.6** | **62.3** | **76.2**      | **81.1** | 79.2     | 90.4         | 93.2     | 58.1     | 74.3          | 78.1     | 4.7          | 21.0                     | **74.7**     | **6.1**      | **18.2**             | **74.9**     |
 
 ##### To reproduce them
-Run the labeling/create_json_idx.py file to generate the necessary json index files for the dataset.
+Run the src/labeling/create_json_idx.py file to generate the necessary json index files for the dataset.
 
-Clone the [mapillary repository](https://github.com/mapillary/mapillary_sls/) and run the following command on your machine, substituting "mydir" with the path where you downloaded the mapillary library:
+Clone the [mapillary repository](https://github.com/mapillary/mapillary_sls/) and run the following command on your machine, substituting "MYDIR" with the path where you downloaded the mapillary library:
 
 ```shell
-export MAPILLARY_ROOT="/mydir/mapillary_sls/"
+export MAPILLARY_ROOT="/MYDIR/mapillary_sls/"
 ```
 
+Create the JSON index files for the MSLS dataset as follows. (replace PATH-TO-DATASET with the directory where the MSLS dataset is)
 ```shell
-python3 labeling/create_json_idx.py --dataset msls --root_dir /mydir/MSLS/
+python3 src/labeling/create_json_idx.py --dataset msls --root_dir PATH-TO-DATASET/MSLS/
 ```
 
 Run the extract_predictions.py script to compute the map and query features, and the top-k prediction. For instance:
 ```shell
-python3 extract_predictions.py --dataset MSLS --root_dir /mydir/MSLS/ --subset val --model_file models/MSLS/MSLS_resnet152_GeM_480_GCL.pth --backbone resnet152 --pool GeM --f_length 2048
+python3 extract_predictions.py --dataset MSLS --root_dir PATH-TO-DATASET/MSLS/ --subset val --model_file models/MSLS/MSLS_resnet152_GeM_480_GCL.pth --backbone resnet152 --pool GeM --f_length 2048
 ```
 This will produce the results on the MSLS validation set for this model. If you select --subset test, the file results/MSLS/test/MSLS_resnet152_GeM_480_GCL_predictions.txt will be generated. To evaluate the predictions you will need to submit this file to the [MSLS evaluation server](https://codalab.lisn.upsaclay.fr/competitions/865#results).
 
-To apply PCA whitening run the apply_pca.py script with the appropiate parameters. For instance, for the example above, you have to run:
+To apply PCA whitening run the apply_pca.py script with the appropriate parameters. For instance, for the example above, you have to run:
 ```shell
-python3 apply_pca.py --dataset MSLS --root_dir /mydir/MSLS/ --subset val --name MSLS_resnet152_GeM_480_GCL 
+python3 apply_pca.py --dataset MSLS --root_dir PATH-TO-DATASET/MSLS/ --subset val --name MSLS_resnet152_GeM_480_GCL 
 ```
 
-To reproduce all of our experiments we include a series of evaluation scripts in the scripts folder, for the MSLS, Pittsburgh, Tokyo24/7, TokyoTM, RobotCar Seasons v2 and Extended CMU Seasons datasets. These scripts need the index files for each dataset that are available [here](https://drive.google.com/drive/folders/1DT9hTiFKQH2x8aqJoFgmMGH8iftfZ0n-?usp=sharing) and our model files, available [here](https://drive.google.com/drive/folders/1RHxrAj062ZxDp5817t1s4OXGLP_i8JFX?usp=sharing).
+To reproduce our experiments we include a series of evaluation scripts in the 'scripts' folder, for the MSLS, Pittsburgh, Tokyo24/7, TokyoTM, RobotCar Seasons v2 and Extended CMU Seasons datasets. These scripts need the index files for each dataset that are available [here](https://drive.google.com/drive/folders/1DT9hTiFKQH2x8aqJoFgmMGH8iftfZ0n-?usp=sharing) and our model files, available [here](https://drive.google.com/drive/folders/1RHxrAj062ZxDp5817t1s4OXGLP_i8JFX?usp=sharing).
 
 
 ### Train your own models
-If you want to train a model for MSLS using the GCL function you must execute train.py with the appropiate parameters. For example:
+If you want to train a model on MSLS using the GCL function you must execute train.py with the appropriate parameters. For example:
 ```shell
-python3 train.py --root_dir mydir/MSLS/ --cities val --backbone vgg16 --use_gpu --pool GeM --last_layer 2 
+python3 train.py --root_dir PATH-TO-DATASET/MSLS/ --cities val --backbone vgg16 --use_gpu --pool GeM --last_layer 2 
 ```
-Make sure that your root dir contains the graded GT files.
+
+__IMPORTANT NOTES FOR TRAINING__ 
+
+Make sure that the 'train_val' dir of the MSLS data set contains the graded files with the graded Ground Truth (the label files should be at the same level of the city folders in the train_val directory of MSLS). <br />
+Download the ground truth files from our [DataVerse repository](https://dataverse.nl/dataset.xhtml?persistentId=doi:10.34894/W4LIGP&faces-redirect=true).  <br />
+The password to extract the zip-file with the labels is 'gcl2022'. 
