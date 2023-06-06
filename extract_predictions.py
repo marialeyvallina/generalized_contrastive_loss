@@ -115,7 +115,6 @@ def world_to_camera(pose):
     qx, qy, qz, qw = R.from_matrix(r).as_quat()
     return qw, qx, qy, qz, tx, ty, tz
 
-
 def predict_poses_cmu(root_dir, m_feats_file, q_feats_file):
     ref_impaths, ref_poses, ref_impref = load_index(root_dir + "reference.json")
     test_impaths, test_impref = load_index(root_dir + "test.json")
