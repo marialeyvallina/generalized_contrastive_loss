@@ -8,6 +8,7 @@ import numpy as np
 
 import os
 import sys
+# if 'MAPILLARY_ROOT' in os.environ:
 sys.path.append(os.environ['MAPILLARY_ROOT'])
 
 from mapillary_sls.datasets.msls import MSLS

@@ -48,7 +48,10 @@ def extract_features(dl, net, f_length, feats_file):
     if not os.path.exists(feats_file):
         feats = np.zeros((len(dl.dataset), f_length))
         for i, batch in tqdm(enumerate(dl), desc="Extracting features"):
-            x = net.forward(batch.cuda())
+            if torch.cuda.is_available():
+                x = net.forward(batch.cuda())
+            else:
+                x = net.forward(batch)
             feats[i * dl.batch_size:i * dl.batch_size + dl.batch_size] = x.cpu().detach().squeeze(0)
 
         np.save(feats_file, feats)
@@ -56,8 +59,8 @@ def extract_features(dl, net, f_length, feats_file):
         print(feats_file, "already exists. Skipping.")
 
 
-def extract_features_msls(subset, root_dir, net, f_length, image_t, savename, results_dir, batch_size, k, m,
-                          cls_token=False):
+def extract_features_msls(subset, root_dir, net, f_length, image_t, savename, results_dir,
+                          batch_size, k, cls_token=False):
     cities = default_cities[subset]
 
     result_file = results_dir + "/" + savename + "_predictions.txt"
@@ -279,7 +282,8 @@ if __name__ == "__main__":
     # except:
     #    test_net.load_state_dict(torch.load(params.model_file)["state_dict"])
     test_net.eval()
-    test_net.cuda()
+    if torch.cuda.is_available():
+        test_net = test_net.cuda()
 
     # Create the datasets
     image_size = [int(x) for x in (params.image_size).split(",")]
