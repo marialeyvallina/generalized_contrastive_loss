@@ -6,7 +6,7 @@ from torchvision import models
 
 def create_dataloader(dataset, root_dir, idx_file, gt_file, image_t, batch_size):
     # Create dataset
-    if dataset=="test":
+    if dataset == "test":
         ds = TestDataSet(root_dir, idx_file, transform=image_t)
         return DataLoader(ds, batch_size=batch_size, num_workers=4)
 
@@ -15,13 +15,15 @@ def create_dataloader(dataset, root_dir, idx_file, gt_file, image_t, batch_size)
     elif dataset == "binary_siamese":
         ds = SiameseDataSet(root_dir, idx_file, gt_file, ds_key="sim", transform=image_t)
     return DataLoader(ds, batch_size=batch_size, num_workers=4, shuffle=True)
-    
+
+
 def create_msls_dataloader(dataset, root_dir, cities, transform, batch_size,model=None):
     if dataset == "binary_MSLS":
         ds = MSLSDataSet(root_dir, cities, ds_key="sim", transform=transform)
     elif dataset == "soft_MSLS":
         ds = MSLSDataSet(root_dir, cities, ds_key="fov", transform=transform)
     return DataLoader(ds, batch_size=batch_size, num_workers=4, shuffle=True)
+
 
 def get_backbone(name):
     if name == "resnet18":
@@ -40,7 +42,7 @@ def get_backbone(name):
         output_dim=2208
     elif name == "vgg16":
         backbone = models.vgg16(pretrained=True).features
-        output_dim=512
+        output_dim = 512
     elif name == "resnext":
         backbone = torch.hub.load('facebookresearch/WSL-Images', 'resnext101_32x8d_wsl')
     if "resne" in name:
@@ -49,9 +51,7 @@ def get_backbone(name):
     return backbone, output_dim
 
 
-
 def create_model(name, pool, last_layer=None, norm=None, p_gem=3, mode="siamese"):
-    
     backbone, output_dim = get_backbone(name)
     layers = len(list(backbone.children()))
 

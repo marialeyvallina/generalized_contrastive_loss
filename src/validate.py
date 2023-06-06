@@ -13,14 +13,15 @@ sys.path.append(os.environ['MAPILLARY_ROOT'])
 from mapillary_sls.datasets.msls import MSLS
 from mapillary_sls.utils.eval import eval
 
+
 def validate(prediction, msls_root, result_file, ks=[1, 5, 10, 20]):
 
     # select for which ks to evaluate
 
-    dataset = MSLS(msls_root, cities = "", mode = 'val', posDistThr = 25)
+    dataset = MSLS(msls_root, cities="", mode='val', posDistThr=25)
 
     # get query and positive image keys
-    database_keys =  [','.join([bn(i)[:-4] for i in p.split(',')]) for p in dataset.dbImages]
+    database_keys = [','.join([bn(i)[:-4] for i in p.split(',')]) for p in dataset.dbImages]
     positive_keys = [[','.join([bn(i)[:-4] for i in p.split(',')]) for p in dataset.dbImages[pos]] for pos in dataset.pIdx]
     query_keys = [','.join([bn(i)[:-4] for i in p.split(',')]) for p in dataset.qImages[dataset.qIdx]]
     all_query_keys = [','.join([bn(i)[:-4] for i in p.split(',')]) for p in dataset.qImages]

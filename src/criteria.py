@@ -4,12 +4,11 @@ import torch.nn as nn
 
 class ContrastiveLoss(torch.nn.Module):
 
-    def __init__(self, metric, margin=2.0, **kwargs):
+    def __init__(self, margin=.5, **kwargs):
         super(ContrastiveLoss, self).__init__()
         self.margin = margin
-        self.metric = metric
+        # self.metric = metric
         self.distance = torch.nn.PairwiseDistance(p=2)
-
 
     def forward(self, out0, out1, label):
         gt = label.float()
