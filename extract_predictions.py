@@ -281,9 +281,9 @@ if __name__ == "__main__":
     #    test_net.load_state_dict(torch.load(params.model_file)["model_state_dict"])
     # except:
     #    test_net.load_state_dict(torch.load(params.model_file)["state_dict"])
-    test_net.eval()
     if torch.cuda.is_available():
-        test_net = test_net.cuda()
+        test_net.cuda()
+    test_net.eval()
 
     # Create the datasets
     image_size = [int(x) for x in (params.image_size).split(",")]
