@@ -17,7 +17,7 @@ def create_dataloader(dataset, root_dir, idx_file, gt_file, image_t, batch_size)
     return DataLoader(ds, batch_size=batch_size, num_workers=4, shuffle=True)
 
 
-def create_msls_dataloader(dataset, root_dir, cities, transform, batch_size,model=None):
+def create_msls_dataloader(dataset, root_dir, cities, transform, batch_size):
     if dataset == "binary_MSLS":
         ds = MSLSDataSet(root_dir, cities, ds_key="sim", transform=transform)
     elif dataset == "soft_MSLS":

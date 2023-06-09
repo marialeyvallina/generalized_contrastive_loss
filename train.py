@@ -27,7 +27,7 @@ class TrainParser():
         self.parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         self.parser.add_argument('--root_dir', required=True, help='Root directory of the dataset')
         self.parser.add_argument('--cities', required=False, default='train', help='Subset of MSLS')
-        self.parser.add_argument('--batch_size', type=int, default=16, help='input batch size')
+        self.parser.add_argument('--batch_size', type=int, default=32, help='input batch size')
         self.parser.add_argument('--name', type=str, required=False, help='name of the experiment', default='testexp')
         self.parser.add_argument('--backbone', type=str, default='vgg16', help='which architecture to use. [resnet50, resnet152, resnext, vgg16]')
         self.parser.add_argument('--snapshot_dir', type=str, default='./snapshots', help='models are saved here')
@@ -110,14 +110,14 @@ def train(params):
                                ttf.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
                                ])
     # writer = SummaryWriter('runs/'+params.name+"_"+datetime.now().isoformat("-").split(".")[0].replace(":","-"))
-    mode = "siamese"
     model = create_model(params.backbone, params.pool, last_layer=params.last_layer, norm=params.norm, p_gem=params.p)
     if torch.cuda.is_available():
         model = model.cuda()
     loss = ContrastiveLoss(params.margin)
     print(params.dataset)
-    dataloader = create_msls_dataloader(params.dataset, params.root_dir, params.cities, transform=image_t,
-                                        batch_size=params.batch_size, model=model)
+    dataloader = create_msls_dataloader(params.dataset, params.root_dir, params.cities,
+                                        transform=image_t,
+                                        batch_size=params.batch_size)
     
     # if params.use_gpu:
     if torch.cuda.is_available():
@@ -129,9 +129,9 @@ def train(params):
     scheduler = StepLR(optimizer, step_size=params.step_size, gamma=params.lr_gamma)
     init_step = 0
     optimizer.zero_grad()
-    # metrics, is_best = val(params, model, image_t, best_metric, reference_metric=ref_metric)
-    # best_metric = metrics[ref_metric]
-    best_metric = 0
+    metrics, is_best = val(params, model, image_t, best_metric, reference_metric=ref_metric)
+    best_metric = metrics[ref_metric]
+    # best_metric = 0
     # for step in tqdm(range(init_step, params.steps), desc="Steps"):
     for step in range(init_step, params.steps):
         # step
@@ -199,4 +199,5 @@ if __name__ == "__main__":
     p = TrainParser()
     p.parse()
     params = p.opt
+    print(params)
     train(params)
