@@ -266,7 +266,6 @@ class MSLSDataSet(Dataset):
             if not q_pano[city_qidx]: #we skip panoramas
                 q_fovs = torch.Tensor(f[self.ds_key][city_qidx,:])
                 if self.ds_key=="fov":
-                    
                     s=np.random.choice(np.arange(3), p=[0.5,0.25,0.25])
                     if idx in self.d2n_idcs:##We try to select a night match
                         if s==0: #positive
@@ -375,7 +374,6 @@ class MSLSDataSet(Dataset):
             if not q_pano[city_qidx]: #we skip panoramas
                 q_fovs = torch.Tensor(f[self.ds_key][city_qidx,:])
                 if self.ds_key=="fov":
-                    
                     s=np.random.choice(np.arange(3), p=[0.5,0.25,0.25])
                     if s==0: #positive
                         idcs=np.where(np.logical_and(q_fovs >= 0.5, np.logical_not(m_pano)))[0]

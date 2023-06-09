@@ -125,13 +125,13 @@ def train(params):
         loss = loss.cuda()
     total_iterations = 0
 
-    optimizer = optim.SGD(model.parameters(), lr=params.learning_rate, weight_decay=0)
+    optimizer = optim.SGD(model.parameters(), lr=params.learning_rate)
     scheduler = StepLR(optimizer, step_size=params.step_size, gamma=params.lr_gamma)
     init_step = 0
     optimizer.zero_grad()
-    metrics, is_best = val(params, model, image_t, best_metric, reference_metric=ref_metric)
-    best_metric = metrics[ref_metric]
-    # best_metric = 0
+    # metrics, is_best = val(params, model, image_t, best_metric, reference_metric=ref_metric)
+    # best_metric = metrics[ref_metric]
+    best_metric = 0
     # for step in tqdm(range(init_step, params.steps), desc="Steps"):
     for step in range(init_step, params.steps):
         # step
@@ -141,7 +141,7 @@ def train(params):
 
             mini_batch_size = 2
             accum_iterations = int(data["im0"].shape[0]/mini_batch_size)
-
+            print(data["label"])
             for j in range(accum_iterations):
                 a = j * mini_batch_size
                 b = a + mini_batch_size
@@ -152,6 +152,7 @@ def train(params):
                 else:
                     x0, x1 = model(data["im0"][a:b,:], data["im1"][a:b,:])
                     error = loss(x0, x1, data["label"][a:b])
+                print(data["label"][a:b])
                 null_losses = torch.sum(error==0).item()/len(error)
                         
                 error = torch.mean(error) / accum_iterations
