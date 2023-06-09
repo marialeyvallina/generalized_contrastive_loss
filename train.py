@@ -141,7 +141,6 @@ def train(params):
 
             mini_batch_size = 2
             accum_iterations = int(data["im0"].shape[0]/mini_batch_size)
-            print(data["label"])
             for j in range(accum_iterations):
                 a = j * mini_batch_size
                 b = a + mini_batch_size
@@ -152,7 +151,7 @@ def train(params):
                 else:
                     x0, x1 = model(data["im0"][a:b,:], data["im1"][a:b,:])
                     error = loss(x0, x1, data["label"][a:b])
-                print(data["label"][a:b])
+
                 null_losses = torch.sum(error==0).item()/len(error)
                         
                 error = torch.mean(error) / accum_iterations
