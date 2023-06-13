@@ -1,6 +1,6 @@
-from src.datasets import *
+from .datasets import *
 from torch.utils.data import DataLoader
-from src.networks import *
+from .networks import *
 from torchvision import models
 
 
