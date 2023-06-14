@@ -8,8 +8,16 @@ import numpy as np
 
 import os
 import sys
-# if 'MAPILLARY_ROOT' in os.environ:
-sys.path.append(os.environ['MAPILLARY_ROOT'])
+if 'MAPILLARY_ROOT' in os.environ:
+    sys.path.append(os.environ['MAPILLARY_ROOT'])
+else:
+    # get current file's path, go up one level and add libs/mapillary_sls to path
+    file_path = os.path.dirname(os.path.realpath(__file__))
+    project_path = os.path.abspath(os.path.join(file_path, os.pardir))
+    mapillary_path = os.path.join(project_path, 'libs', 'mapillary_sls')
+
+    sys.path.append(mapillary_path)
+    
 
 from mapillary_sls.datasets.msls import MSLS
 from mapillary_sls.utils.eval import eval
