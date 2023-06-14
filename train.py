@@ -46,6 +46,8 @@ class TrainParser():
         self.parser.add_argument('--learning_rate', type=float, default='.1', help='learning rate')
         self.parser.add_argument('--lr_gamma', type=float, default='.1', help='learning rate decay')
         self.parser.add_argument('--step_size', type=float, default='25', help='Learning rate update frequency (in steps)')
+        self.parser.add_argument('--seg_net', type=str, default=None, help='[deeplabv3plus_resnet101]')
+        self.parser.add_argument('--attention', type=str, default=None, help='[None|all|mask_preset]')
 
     def parse(self):
         self.opt = self.parser.parse_args()
@@ -110,7 +112,15 @@ def train(params):
                                ttf.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
                                ])
     # writer = SummaryWriter('runs/'+params.name+"_"+datetime.now().isoformat("-").split(".")[0].replace(":","-"))
-    model = create_model(params.backbone, params.pool, last_layer=params.last_layer, norm=params.norm, p_gem=params.p)
+    model = create_model(
+        params.backbone, 
+        params.pool, 
+        last_layer=params.last_layer, 
+        norm=params.norm, 
+        p_gem=params.p,
+        seg_name=params.seg_net,
+        attention=params.attention,
+    )
     if torch.cuda.is_available():
         model = model.cuda()
     loss = ContrastiveLoss(params.margin)
