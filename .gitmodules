@@ -1,0 +1,6 @@
+[submodule "libs/mapillary_sls"]
+	path = libs/mapillary_sls
+	url = https://github.com/mapillary/mapillary_sls/
+[submodule "libs/DeepLabV3Plus-Pytorch"]
+	path = libs/deeplabv3plus_pytorch
+	url = https://github.com/VainF/DeepLabV3Plus-Pytorch
